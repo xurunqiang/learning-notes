@@ -12,6 +12,10 @@ prev: "[[PCA主成分分析]]"
 > 一句话：**任何矩阵都能拆成一堆"秩 1 矩阵"的加权和**，权重（奇异值）从大到小排。只留前 k 项，就是原矩阵在最小误差意义下的最佳简化。
 
 - **数据集**：STL-10（96×96 彩色，`桌面/师生距离比值路线/data/stl10`，9/28 下载）+ Fashion-MNIST（回顾第一课）
+
+<img src="images/fig00_samples.png" alt="fig00_samples" width="760">
+
+📖 **读图**：本课用的 STL-10 测试集样例（96×96 彩色，8000 张）。后面所有「秩 k 近似 / 压缩比 / PSNR」都是在这些图上做的。
 - **可运行代码**：`桌面/学习/02_SVD奇异值分解.ipynb`（kernel 选 `Python (xx)`）
 - **与第一课的关系**：PCA 是 SVD 在"统计量"上的应用（中心化 + 协方差）。SVD 本身是纯矩阵工具，不需要"数据/样本"的概念——**先学 SVD 再回头看 PCA，会通透很多**
 
@@ -23,7 +27,7 @@ prev: "[[PCA主成分分析]]"
 
 **为什么它是"积木"**：每一行都是 $v^\top$ 的倍数、每一列都是 $u$ 的倍数——一张 $m\times n$ 的图只需要 $m+n$ 个数就能存下。任何复杂矩阵都是这些积木的加权和。
 
-<img src="images/fig01_rank1.png" alt="fig01 rank1" width="760">
+<img src="images/fig01_rank1.png" alt="fig01_rank1" width="760">
 
 📖 **读图**：左图列向量 $u$（纵向 pattern，一个峰），中图行向量 $v^\top$（横向 pattern，衰减振荡），右图是它们的外积——**行是 $v^\top$ 的复制、列是 $u$ 的复制**，图案完全"可分离"。秩 1 矩阵的信息量极小，但它是 SVD 的原子。
 
@@ -39,7 +43,7 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 
 **几何意义**：任何线性变换 = **旋转（$V^\top$）→ 沿轴拉伸（$\Sigma$）→ 再旋转（$U$）**。所以 $A$ 把单位圆变成椭圆，**椭圆半轴长度 = 奇异值，半轴方向 = 左奇异向量**。
 
-<img src="images/fig02_geometry.png" alt="fig02 geometry" width="700">
+<img src="images/fig02_geometry.png" alt="fig02_geometry" width="700">
 
 📖 **读图**：左图单位圆，右图被 $A=\begin{psmallmatrix}3&1\\1&2\end{psmallmatrix}$ 拉成椭圆。两支绿色/橙色箭头就是 $u_1,u_2$，长度是 $\sigma_1=3.62,\ \sigma_2=1.38$。**注意箭头互相垂直**——正交性保证 SVD 总存在（任何实矩阵都有 SVD，这是它比特征分解普适的地方：特征分解只对方阵、且不保证实特征值）。
 
@@ -47,11 +51,11 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 
 **Frobenius 范数**：$\|A\|_F^2=\sum_i\sigma_i^2$（全部元素的平方和）。所以第 $k$ 个奇异值的"能量占比"是 $\sigma_k^2/\sum\sigma_j^2$。
 
-<img src="images/fig03_spectrum.png" alt="fig03 spectrum" width="700">
+<img src="images/fig03_spectrum.png" alt="fig03_spectrum" width="700">
 
 📖 **读图**：左图前 40 个奇异值，第 1 个（54.42）远高于第 2 个（9.13），之后长尾衰减；右图对数坐标下近似直线下降。**这张图的背景（天空）非常单调，所以谱特别陡**——能量 90% 只要 **1 个**奇异值，99% 只要 **12 个**（总秩 96）。
 
-<img src="images/fig04_energy.png" alt="fig04 energy" width="700">
+<img src="images/fig04_energy.png" alt="fig04_energy" width="700">
 
 📖 **读图**：蓝柱是单个奇异值能量占比，红曲线是累计。**累计曲线越早上凸 = 数据越低秩 = 压缩空间越大。** 有效秩：参与比 5.88、熵秩 1.71（总维度 96）——这张图实际上只活在很少几个方向上。
 
@@ -64,7 +68,7 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 
 **这就是第一课 PCA 最优性的"矩阵版"**——那边是 $\sum_{j>k}\lambda_j$，这边是 $\sum_{i>k}\sigma_i^2$，本质相同（$\lambda=\sigma^2/(N-1)$）。
 
-<img src="images/fig05_lowrank.png" alt="fig05 lowrank" width="760">
+<img src="images/fig05_lowrank.png" alt="fig05_lowrank" width="760">
 
 📖 **读图**：秩 k 从 1 到 96 的重建。k=1 时只剩一张"平均亮度版"，k=5 出现主要色块，k=20 结构基本齐全（相对误差 6.3%），k=40 几乎无差别（2.7%）。
 
@@ -82,17 +86,17 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 
 **要存多少数**：原图 $m\times n$ 存 $mn$ 个数；秩 k 只需 $k(m+n+1)$ 个。压缩比 $=\dfrac{mn}{k(m+n+1)}$。
 
-<img src="images/fig06_gray.png" alt="fig06 gray" width="760">
+<img src="images/fig06_gray.png" alt="fig06_gray" width="760">
 
 📖 **读图**：灰度图 k=1→96。k=5 已经能看出主体（因为第 1 个奇异值独占 90% 能量，背景太单调了），k=20 结构齐全。
 
-<img src="images/fig07_color.png" alt="fig07 color" width="760">
+<img src="images/fig07_color.png" alt="fig07_color" width="760">
 
 📖 **读图**：彩色图对 R/G/B 三个通道各做一次 SVD。k=8 时整体色调和构图都在，但细节纹理糊；k=30 之后与原图几乎无差别。**注意彩色图有效秩更高**——三个通道各有一套谱，且物体表面纹理丰富。
 
 ## 7. 误差 vs 压缩率
 
-<img src="images/fig08_curve.png" alt="fig08 curve" width="700">
+<img src="images/fig08_curve.png" alt="fig08_curve" width="700">
 
 📖 **读图**：左图相对误差随 k 下降（对数横轴）；右图是"压缩比 vs PSNR"的**性价比曲线**——越靠右上越划算。几个代表点：
 
@@ -109,11 +113,11 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 
 **原理**：真实图像近似低秩，而**随机噪声是满秩的**——它均匀铺在所有奇异方向上。截断 SVD 只留前 k 个方向，噪声所在的方向被整体丢掉。
 
-<img src="images/fig09_denoise.png" alt="fig09 denoise" width="760">
+<img src="images/fig09_denoise.png" alt="fig09_denoise" width="760">
 
 📖 **读图**：加 σ=0.12 高斯噪声后 PSNR 掉到约 14 dB；k=15 去噪后回升明显，k=40 更干净。注意 k 太大时噪声也会被保留回来（k=96 等于没去噪）——**去噪的 k 是"结构 vs 噪声"的权衡**。
 
-<img src="images/fig09b_spec_noise.png" alt="fig09b spec noise" width="700">
+<img src="images/fig09b_spec_noise.png" alt="fig09b_spec_noise" width="700">
 
 📖 **读图**：噪声对谱的影响一目了然——加噪后（红）**尾部奇异值被整体抬高**，出现一段"噪声地板"，因为它对所有方向均匀加方差。去噪的本质 = 把地板以上的部分裁掉。**这个"谱上找地板拐点"的做法，就是自监督里判断表示质量的思想源头之一**。
 
@@ -121,11 +125,11 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 
 对图像：$u_i$ 是纵向 pattern、$v_i$ 是横向 pattern，第 i 个分量 $\sigma_i u_i v_i^\top$ 是它们的外积。
 
-<img src="images/fig10_uv.png" alt="fig10 uv" width="760">
+<img src="images/fig10_uv.png" alt="fig10_uv" width="760">
 
 📖 **读图**：上排 $u_1..u_6$（纵向），下排 $v_1..v_6$（横向）。第 1 对是大尺度结构，越往后振荡越快、越像噪声——**从粗到细的层级**，和 PCA 的"特征服装"一样。
 
-<img src="images/fig10b_comp.png" alt="fig10b comp" width="760">
+<img src="images/fig10b_comp.png" alt="fig10b_comp" width="760">
 
 📖 **读图**：前 4 个秩 1 分量的图像。注意它们是**有正有负**的（红蓝），重建时按系数 $z_i=u_i^\top A v_i$ 加减叠加。
 
@@ -141,7 +145,7 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 - 两种途径特征值：SVD [19.7329, 12.4999, …] vs eigh [19.7329, 12.4999, …]，**最大相对误差 2.88e-15**（机器精度）
 - 前 10 个主成分方向余弦相似度全部 > 0.99
 
-<img src="images/fig11_pca.png" alt="fig11 pca" width="700">
+<img src="images/fig11_pca.png" alt="fig11_pca" width="700">
 
 📖 **读图**：左图两条曲线完全重合；右图 10 根柱子都顶到 1.0。**第一课的 PCA 和这一课的 SVD 从此打通：同一件事的两种算法路径**。SVD 数值上更稳（不用显式算 $X_c^\top X_c$），所以 sklearn 内部用的就是 SVD。
 
@@ -160,7 +164,7 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 
 伪逆解与 `lstsq` 完全一致：[2.4635, 1.1284]。
 
-<img src="images/fig12_lstsq.png" alt="fig12 lstsq" width="620">
+<img src="images/fig12_lstsq.png" alt="fig12_lstsq" width="620">
 
 📖 **读图**：50 个带噪观测点，SVD 伪逆拟合出 $y=2.46x+1.13$（真实 2.5 和 1.0，噪声导致的偏差正常）。**你每天用的 `np.linalg.lstsq`、线性回归、乃至神经网络的初始化分析，背后都是 SVD**。
 
@@ -168,7 +172,7 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 
 用户-物品矩阵巨大、稀疏、**近似低秩**（人的偏好由少数隐因子决定）。迭代补全：`截断 SVD → 低秩估计填回缺失位 → 重复`。
 
-<img src="images/fig13_complete.png" alt="fig13 complete" width="760">
+<img src="images/fig13_complete.png" alt="fig13_complete" width="760">
 
 📖 **读图**：真实矩阵秩 3（左），抹掉 60% 只留 40%（左二），迭代 SVD 补全结果（右二）与真实几乎一样，RMSE 0.0069（取值范围 ±2.49，误差 <0.3%）。右图误差随迭代指数下降。**Netflix Prize 的核心思想就是这个的工业级版本**，也是"矩阵补全理论"（Candès & Recht）的玩具演示。
 
@@ -184,7 +188,7 @@ $$A=U\Sigma V^\top=\sum_{i=1}^{r}\sigma_i u_i v_i^\top$$
 | 部分塌缩（20/128） | 31.55 | 21.79 |
 | 完全塌缩 | **1.24** | **1.00** |
 
-<img src="images/fig14_collapse.png" alt="fig14 collapse" width="760">
+<img src="images/fig14_collapse.png" alt="fig14_collapse" width="760">
 
 📖 **读图**：三张谱图从平到陡。健康的谱是水平线（所有方向等方差）；部分塌缩前 20 个高、后面塌下去；完全塌缩只剩 1 根柱子。**你在自监督训练里画"有效秩曲线"，画的就是这个**。LeJEPA/SIGReg 要求嵌入分布接近各向同性高斯，目标就是让这张谱保持水平。
 
