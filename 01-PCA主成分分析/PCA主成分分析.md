@@ -55,11 +55,11 @@ $$X=\begin{bmatrix}x_1^\top\\ \vdots \\ x_N^\top\end{bmatrix}\in\mathbb{R}^{N\ti
 
 **为什么可以粗暴展平**：展平丢掉了二维邻接关系——PCA 不知道第 100 号和第 101 号像素是否相邻，它只看**统计相关性**。奇妙的是，光靠统计它依然能找出袖子、鞋底这类结构（第 6 步会看到）。
 
-<img src="images/fig01_vector.png" alt="fig01 vector" width="700">
+<img src="images/fig01_vector.png" alt="fig01_vector" width="700">
 
 📖 **读图**：右图是展平后前 64 个像素（原图第一行多一点）的取值。前一段全是 0（顶部空白背景），到第 20 多个才有非零值——**数据里有大量恒定不变的维度**，它们方差为 0，对 PCA 毫无贡献（对应特征值就是 0）。
 
-<img src="images/fig00_samples.png" alt="fig00 samples" width="680">
+<img src="images/fig00_samples.png" alt="fig00_samples" width="680">
 
 📖 **读图**：10×10 样本网格。注意两点：(1) 同类内部差异很大（"套衫"有长袖短袖），类内方差不小；(2) 不同类外形有重叠（衬衫 vs T恤），后面 k=2 投影时它们会混在一起。另外背景纯黑、衣服居中且大小接近——**对齐良好的数据 PCA 效果最好**。
 
@@ -77,7 +77,7 @@ $$\frac{1}{N-1}X^\top X = C + \bar{x}\bar{x}^\top$$
 
 多出的 $\bar{x}\bar{x}^\top$ 是秩 1 的"均值方向"项，会把 PC1 拉去指向"平均图像"而不是变化最大的方向。**协方差的定义本身就要求先中心化。**（代码输出验证：中心化后各维均值在 $10^{-14}$ 量级。）
 
-<img src="images/fig02_center.png" alt="fig02 center" width="700">
+<img src="images/fig02_center.png" alt="fig02_center" width="700">
 
 📖 **读图**：左图"平均图像"是所有衣服叠加后的模糊轮廓，能看出大致的上身/下身形状。右图中心化后单张图用红蓝配色（红=比平均亮，蓝=比平均暗），**红色区域正好勾出这件衣服区别于"平均衣服"的地方**——PCA 关心的不是图像本身，而是"偏离均值多少"。
 
@@ -101,11 +101,11 @@ $$C=\frac{1}{N-1}X_c^\top X_c\in\mathbb{R}^{784\times784},\qquad C_{ij}=\frac{1}
 
 **PCA 的目标一句话**：找一组新坐标，让变换后协方差矩阵**变成对角阵**（各维度不相关）。
 
-<img src="images/fig03_cov.png" alt="fig03 cov" width="700">
+<img src="images/fig03_cov.png" alt="fig03_cov" width="700">
 
 📖 **读图**：左图热力图有明显**块状结构**——相邻像素高度相关，形成对角线附近的亮带；非对角越亮 = 冗余越强 = 压缩空间越大。右图把对角线（各像素方差）还原成 28×28：亮的是衣服轮廓和鞋底，暗的是永远全黑的背景角落——**背景像素方差≈0，这就是"有效维度远小于 784"的直接证据**。
 
-<img src="images/fig04_covrow.png" alt="fig04 covrow" width="700">
+<img src="images/fig04_covrow.png" alt="fig04_covrow" width="700">
 
 📖 **读图**：左图标出三个选中像素，右边是"该像素与全图每个像素的协方差"还原图，红=同涨同跌，蓝=反向。**相关区域连成了有意义的形状（袖子、衣摆）**——PCA 完全不知道像素位置，仅凭统计相关就"发现"了空间结构。
 
@@ -132,7 +132,7 @@ $$\mathrm{Var}(z)=\frac{1}{N-1}z^\top z=\frac{1}{N-1}v^\top X_c^\top X_c v = v^\
 
 实测：前 6 个特征值两条路相对误差 $8.6\times10^{-3}$（SVD 只用 5000 子样本有采样差异），主成分方向余弦相似度 > 0.99 → **两者确实等价**。
 
-<img src="images/fig05_scree.png" alt="fig05 scree" width="700">
+<img src="images/fig05_scree.png" alt="fig05_scree" width="700">
 
 📖 **读图**：左图前 60 个特征值（碎石图），第一个 ≈20 特别高、第二个 ≈12 后快速衰减，典型长尾。右图全部 784 个的**对数坐标**：近似直线下降，尾部有一段接近 0 的平台——那些是数值为 0 的特征值（对应恒定背景像素）。**"陡崖 + 长尾" = 信息集中在前几十个方向**。
 
@@ -147,7 +147,7 @@ $$\mathrm{Var}(z)=\frac{1}{N-1}z^\top z=\frac{1}{N-1}v^\top X_c^\top X_c v = v^\
 - **参与比**：$\left(\sum\lambda\right)^2\big/\sum\lambda^2$ —— 完全均匀时 = 784，完全塌缩时 = 1
 - **熵秩**：$\exp(-\sum_k p_k\log p_k)$，$p_k=r_k$ —— 同样 1~784，对"几个方向重要"更敏感
 
-<img src="images/fig06_cumvar.png" alt="fig06 cumvar" width="700">
+<img src="images/fig06_cumvar.png" alt="fig06_cumvar" width="700">
 
 📖 **读图**：蓝柱是单个解释率（PC1 独占约 38%），红曲线是累计解释率，上升极快后变平。三条虚线标出 90%/95%/99%。**注意 99% 要 456 个方向**——最后 1% 的信息要拿一半以上维度去换，性价比极低。这就是为什么实际取 k 到 90~95% 就收手。
 
@@ -170,7 +170,7 @@ $$x\approx \bar{x}+z_1v_1+z_2v_2+\cdots+z_kv_k$$
 
 跟傅里叶分解思路一模一样——只不过基函数不是固定正弦波，而是**从数据里学出来的**。
 
-<img src="images/fig07_eigen.png" alt="fig07 eigen" width="700">
+<img src="images/fig07_eigen.png" alt="fig07_eigen" width="700">
 
 📖 **读图**（红=正贡献，蓝=负贡献）：
 - **PC1（38%）**：几乎全图同色 → 整体明暗（"这件衣服深还是浅"）
@@ -191,7 +191,7 @@ $$x\approx \bar{x}+z_1v_1+z_2v_2+\cdots+z_kv_k$$
 2. 正交投影：把点垂直投影到 $v_1..v_k$ 张成的 k 维子空间
 3. 低秩近似：$X_c\approx ZV_k^\top$（右边是秩 ≤ k 的矩阵）
 
-<img src="images/fig08_proj2d.png" alt="fig08 proj2d" width="700">
+<img src="images/fig08_proj2d.png" alt="fig08_proj2d" width="700">
 
 📖 **读图**：4000 件衣服投到 PC1-PC2，颜色是真实类别（但 PCA 没用过标签）。
 1. **裤子与鞋类明显分离** —— 轮廓差异大，最容易被前两个方向区分
@@ -200,7 +200,7 @@ $$x\approx \bar{x}+z_1v_1+z_2v_2+\cdots+z_kv_k$$
 
 **说明：PCA 是无监督的，它优化信息保留，不优化分类。**
 
-<img src="images/fig09_proj3d.png" alt="fig09 proj3d" width="600">
+<img src="images/fig09_proj3d.png" alt="fig09_proj3d" width="600">
 
 📖 **读图**：加 PC3 后，上身几类被稍微拉开，但仍大量重叠。**在 notebook 里可以旋转找角度看分离情况**——想靠线性投影彻底分开这些类，需要更多维度或非线性方法。
 
@@ -218,7 +218,7 @@ $P_k=V_kV_k^\top$ 是**投影矩阵**（幂等 $P_k^2=P_k$）。
 
 $$\text{丢掉的部分}=\sum_{j>k}z_jv_j,\qquad \text{其方差}=\sum_{j>k}\lambda_j$$
 
-<img src="images/fig10_recon.png" alt="fig10 recon" width="760">
+<img src="images/fig10_recon.png" alt="fig10_recon" width="760">
 
 📖 **读图**：5 件服装 × k=1,2,5,10,20,50,100,200,784，从左到右信息递增：
 - **k=1**：只剩一团明暗 —— 只知道深浅和大概位置
@@ -236,7 +236,7 @@ $$\text{丢掉的部分}=\sum_{j>k}z_jv_j,\qquad \text{其方差}=\sum_{j>k}\lam
 | 50 | 0.0117 | **19.31 dB** |
 | 200 | 0.0040 | 23.95 dB |
 
-<img src="images/fig11_err.png" alt="fig11 err" width="700">
+<img src="images/fig11_err.png" alt="fig11_err" width="700">
 
 📖 **读图**：左图 MSE 随 k 下降（双对数近似直线 = 幂律衰减），右图 PSNR（>20 dB 通常算"能看"）。**前 20 个方向贡献最大改善，之后曲线明显变平**——边际收益递减极快，和第 5 步累计曲线是同一件事的两种画法。
 
@@ -260,7 +260,7 @@ $$\mathbb{E}\big[\|x-\hat{x}\|^2\big]=\sum_{j>k}\lambda_j$$
 
 **偏差只有 0.1%~3.3%**，定理得到验证。
 
-<img src="images/fig15_theory.png" alt="fig15 theory" width="700">
+<img src="images/fig15_theory.png" alt="fig15_theory" width="700">
 
 📖 **读图**：蓝线（实测）和红虚线（理论）几乎重合。这条等式是理解 PCA 最优性的钥匙：**总方差固定，"保留最多方差" 等价于 "丢掉最少方差"**，而丢掉的量恰好就是后面那些特征值之和。
 
@@ -282,7 +282,7 @@ $$\mathbb{E}\big[\|x-\hat{x}\|^2\big]=\sum_{j>k}\lambda_j$$
 
 **差 7 倍。**
 
-<img src="images/fig12_optimal.png" alt="fig12 optimal" width="700">
+<img src="images/fig12_optimal.png" alt="fig12_optimal" width="700">
 
 📖 **读图**：左图三种方向的 MSE 对比，主成分（蓝柱）远低于另外两者。右图方差视角：红点（主成分）逐个递减且始终高于灰色（随机方向）——**主成分是贪心地一个一个吃掉最多的剩余方差**。
 
@@ -306,11 +306,11 @@ $$z_{\text{white}}=\frac{z}{\sqrt{\lambda}}\ \Longrightarrow\ \mathrm{Cov}(z_{\t
 
 **ZCA 白化**（转回原空间）：$x_{\text{ZCA}}=V\Lambda^{-1/2}V^\top(x-\bar{x})$，同样让协方差变单位阵，但结果仍在像素空间。
 
-<img src="images/fig13_whiten.png" alt="fig13 whiten" width="760">
+<img src="images/fig13_whiten.png" alt="fig13_whiten" width="760">
 
 📖 **读图**：三张协方差热力图的递进：原始像素（非对角大片亮 = 强相关）→ PCA 投影后（只剩对角线 = **完全去相关，这正是 VICReg 想要的样子**）→ 再白化（对角线统一为 1 = 单位阵）。代码确认白化后对角线均值 1.00000、非对角≈0。
 
-<img src="images/fig13b_zca.png" alt="fig13b zca" width="700">
+<img src="images/fig13b_zca.png" alt="fig13b_zca" width="700">
 
 📖 **读图**：上排中心化图，下排 ZCA 白化图。白化后"边缘被增强、噪声被放大"——因为所有方向被拉到同方差，原本微弱的细节（往往是噪声）被放大到和主要结构一样强。**这解释了为什么白化在预处理里要慎用**。
 
@@ -327,7 +327,7 @@ $$\mathcal{L}_{\text{cov}}=\frac{1}{d}\sum_{i\ne j}C(Z)_{ij}^2$$
 
 **"维度塌缩"**：表示只用了少数方向 → 特征值谱出现断崖（前几个巨大、后面趋近 0）→ 有效秩 → 1。
 
-<img src="images/fig14_collapse.png" alt="fig14 collapse" width="760">
+<img src="images/fig14_collapse.png" alt="fig14_collapse" width="760">
 
 📖 **读图**：上排三张协方差热图：原始像素（冗余）→ PCA 后（对角）→ 人为塌缩到 3 维（几乎全黑，只剩左上角 3×3）。下排是特征值谱与有效秩柱状图：
 - **完整表示**：谱衰减平缓，有效秩（参与比）**6.04**
