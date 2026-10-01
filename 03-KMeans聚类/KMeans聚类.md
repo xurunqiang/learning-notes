@@ -28,7 +28,7 @@ prev: "[[SVD奇异值分解]]"
 2. 噪声维度会主导距离计算
 3. 计算量从 $O(Ndk)$ 降下来
 
-<img src="images/fig00_data.png" alt="fig00 data" width="650">
+<img src="images/fig00_data.png" alt="fig00_data" width="650">
 
 📖 **读图**：测试集在前两个主成分上的散点，颜色是真实类别。注意**"裤子"和"鞋类"各自成团、而"上身服装"（T恤/套衫/衬衫/外套）糊成一片**——这个结构决定了后面聚类的成败。
 
@@ -40,7 +40,7 @@ $$J=\sum_{i=1}^{N}\|x_i-\mu_{c_i}\|^2,\qquad c_i=\arg\min_j\|x_i-\mu_j\|^2$$
 
 **这是"鸡生蛋"问题**：知道中心才能分配，知道分配才能算中心。Lloyd 用**交替优化**破解——固定一边优化另一边。
 
-<img src="images/fig01_init.png" alt="fig01 init" width="600">
+<img src="images/fig01_init.png" alt="fig01_init" width="600">
 
 📖 **读图**：起点是随机挑 3 个样本当中心（红叉）。它们都挤在中间，**这就是随机初始化的典型问题：中心可能全落在一团里，另一团没人管**。
 
@@ -54,11 +54,11 @@ $$J=\sum_{i=1}^{N}\|x_i-\mu_{c_i}\|^2,\qquad c_i=\arg\min_j\|x_i-\mu_j\|^2$$
 
 **为什么更新为均值**：对 $\sum_{i\in C_j}\|x_i-\mu_j\|^2$ 关于 $\mu_j$ 求导令其为零 → $\mu_j=\frac{1}{|C_j|}\sum_{i\in C_j}x_i$。**均值是平方误差下的最优代表**；如果换成绝对误差（L1），最优代表就是中位数了。
 
-<img src="images/fig02_iter.png" alt="fig02 iter" width="780">
+<img src="images/fig02_iter.png" alt="fig02_iter" width="780">
 
 📖 **读图**：7 格显示迭代过程。第 1 次迭代就把大部分点分对了（J 从 11132 掉到 2358），第 2 次微调（2108），第 3 次已经不动了。**KMeans 收敛极快，绝大部分工作在头两三拍完成**。
 
-<img src="images/fig03_curve.png" alt="fig03 curve" width="600">
+<img src="images/fig03_curve.png" alt="fig03_curve" width="600">
 
 📖 **读图**：目标函数 J 单调下降（实测值 11131.98 → 2357.91 → 2107.56 → 2107.56）。**单调不增是 Lloyd 收敛的保证**——每步都在下降，而 J 有下界 0，所以必然停。注意它停的是**局部最优**，不是全局最优。
 
@@ -73,7 +73,7 @@ k-means++ 的规则：第一个中心随机选，之后每次以"离已有中心
 | 随机初始化 | 229049 | 223833 | **245745** |
 | k-means++ | **226353** | 223832 | **231058** |
 
-<img src="images/fig04_init.png" alt="fig04 init" width="700">
+<img src="images/fig04_init.png" alt="fig04_init" width="700">
 
 📖 **读图**：左图是 20 次结果的分布——k-means++（橙）明显更集中、更靠左。右图是平均迭代次数，**两者接近（41.7 vs 43.1）**。
 
@@ -86,7 +86,7 @@ k-means++ 的规则：第一个中心随机选，之后每次以"离已有中心
 - **肘部法**：画 J 随 k 的曲线找拐点（J 必然随 k 单调下降，看的是边际收益骤减处）
 - **轮廓系数** $s(i)=\dfrac{b(i)-a(i)}{\max(a,b)}$，其中 $a$ = 到同簇平均距离，$b$ = 到最近邻簇平均距离，取值 $[-1,1]$ 越大越好，**不需要真实标签**
 
-<img src="images/fig05_k.png" alt="fig05 k" width="700">
+<img src="images/fig05_k.png" alt="fig05_k" width="700">
 
 📖 **读图**：左图肘部法——曲线平滑下降，**几乎看不出明显拐点**（真实 k=10 的红色虚线处没有特征）；右图轮廓系数**最大值出现在 k=3**，而真实类别数是 10。
 
@@ -106,7 +106,7 @@ k-means++ 的规则：第一个中心随机选，之后每次以"离已有中心
 
 $$\text{ACC}=0.4868,\quad \text{ARI}=0.3513,\quad \text{NMI}=0.5147$$
 
-<img src="images/fig06_metrics.png" alt="fig06 metrics" width="650">
+<img src="images/fig06_metrics.png" alt="fig06_metrics" width="650">
 
 📖 **读图**：混淆矩阵（行=KMeans 簇，列=真实类别）。理想情况每行只有一个亮点。看几个典型：
 
@@ -141,7 +141,7 @@ $$\text{ACC}=0.4868,\quad \text{ARI}=0.3513,\quad \text{NMI}=0.5147$$
 
 **KMeans = GMM 在协方差→0 且等权重时的极限。**
 
-<img src="images/fig08_gmm.png" alt="fig08 gmm" width="780">
+<img src="images/fig08_gmm.png" alt="fig08_gmm" width="780">
 
 📖 **读图**：数据被刻意拉成各向异性（细长）。中间 KMeans 用虚线圆表示它的"等距"假设——**它只能画圆形的势力范围**；右边 GMM 的红椭圆能带上方向和长短轴。**遇到细长簇，GMM 明显更合适**。
 
@@ -149,7 +149,7 @@ $$\text{ACC}=0.4868,\quad \text{ARI}=0.3513,\quad \text{NMI}=0.5147$$
 
 KMeans 隐含三个假设：**簇是凸的、大小相近、密度相近**。
 
-<img src="images/fig09_fail.png" alt="fig09 fail" width="780">
+<img src="images/fig09_fail.png" alt="fig09_fail" width="780">
 
 📖 **读图**：三行分别打破一个假设——
 1. **月牙形（非凸）**：KMeans 硬切成两块，完全不是想要的结果（这种情况该用谱聚类或 DBSCAN）
@@ -179,9 +179,9 @@ KMeans 隐含三个假设：**簇是凸的、大小相近、密度相近**。
 - **神经网络输出的 embedding**：通常要标准化或 L2 归一化（各维没有天然的方差排序）
 - **无论哪种**：务必在论文/报告里写清楚预处理，否则数字不可复现
 
-<img src="images/fig10b_feat.png" alt="fig10b feat" width="620">
+<img src="images/fig10b_feat.png" alt="fig10b_feat" width="620">
 
-<img src="images/fig10_k_effect.png" alt="fig10 k effect" width="620">
+<img src="images/fig10_k_effect.png" alt="fig10_k_effect" width="620">
 
 📖 **读图**：上图是三种特征的指标柱状图，标准化（右）明显低于前两者。下图是 k 的影响——**k 超过真实类别数后，ACC/ARI 持续下滑**，因为每类被拆得更碎。所以固定 k = 类别数是公平比较的前提。
 
