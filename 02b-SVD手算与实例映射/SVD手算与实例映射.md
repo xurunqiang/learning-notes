@@ -39,13 +39,13 @@ $$A^\top A = V\Sigma^\top \underbrace{U^\top U}_{I}\Sigma V^\top = V(\Sigma^\top
 
 ### 五步流程
 
-| 步 | 做什么 | 本例结果 |
-|---|---|---|
-| 1 | 算 $G=A^\top A$ | $\begin{bmatrix}11&7\\7&11\end{bmatrix}$（9+1+1=11，3+3+1=7，1+9+1=11） |
-| 2 | 求 $G$ 的特征值/向量 | $\lambda_1=11+7=18$，$\lambda_2=11-7=4$；$v_1=\frac{1}{\sqrt2}\begin{bmatrix}1\\1\end{bmatrix}$，$v_2=\frac{1}{\sqrt2}\begin{bmatrix}1\\-1\end{bmatrix}$ |
-| 3 | $\sigma_i=\sqrt{\lambda_i}$ | $\sigma_1=3\sqrt2\approx4.2426$，$\sigma_2=2$ |
-| 4 | $u_i=A v_i/\sigma_i$ | $u_1=\begin{bmatrix}2/3\\2/3\\1/3\end{bmatrix}$，$u_2=\begin{bmatrix}1/\sqrt2\\-1/\sqrt2\\0\end{bmatrix}$ |
-| 5 | 补齐 $U$ 剩余列 | $u_3=u_1\times u_2=\frac{1}{\sqrt{18}}\begin{bmatrix}1\\1\\-4\end{bmatrix}$（左零空间方向） |
+| 步   | 做什么                         | 本例结果                                                                                                                                                  |
+| --- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 算 $G=A^\top A$              | $\begin{bmatrix}11&7\\7&11\end{bmatrix}$（9+1+1=11，3+3+1=7，1+9+1=11）                                                                                   |
+| 2   | 求 $G$ 的特征值/向量               | $\lambda_1=11+7=18$，$\lambda_2=11-7=4$；$v_1=\frac{1}{\sqrt2}\begin{bmatrix}1\\1\end{bmatrix}$，$v_2=\frac{1}{\sqrt2}\begin{bmatrix}1\\-1\end{bmatrix}$ |
+| 3   | $\sigma_i=\sqrt{\lambda_i}$ | $\sigma_1=3\sqrt2\approx4.2426$，$\sigma_2=2$                                                                                                          |
+| 4   | $u_i=A v_i/\sigma_i$        | $u_1=\begin{bmatrix}2/3\\2/3\\1/3\end{bmatrix}$，$u_2=\begin{bmatrix}1/\sqrt2\\-1/\sqrt2\\0\end{bmatrix}$                                              |
+| 5   | 补齐 $U$ 剩余列                  | $u_3=u_1\times u_2=\frac{1}{\sqrt{18}}\begin{bmatrix}1\\1\\-4\end{bmatrix}$（左零空间方向）                                                                   |
 
 **步骤 4 手算示范**（以 $u_1$ 为例）：
 $$Av_1=\frac{1}{\sqrt2}\begin{bmatrix}3+1\\1+3\\1+1\end{bmatrix}=\frac{1}{\sqrt2}\begin{bmatrix}4\\4\\2\end{bmatrix},\qquad
@@ -55,7 +55,7 @@ u_1=\frac{Av_1}{3\sqrt2}=\frac{1}{\sqrt2\cdot 3\sqrt2}\begin{bmatrix}4\\4\\2\end
 
 **验证**：$U\Sigma V^\top$ 与 $A$ 的最大绝对误差 = **4.4×10⁻¹⁶**（机器精度）。两层秩 1 相加的误差 = 8.9×10⁻¹⁶。
 
-<img src="images/fig01_geometry.png" alt="fig01 geometry" width="780">
+<img src="images/fig01_geometry.png" alt="fig01_geometry" width="780">
 
 ### 📖 这张图怎么读
 
@@ -85,7 +85,7 @@ $Bv_i=\sigma_iu_i$ 这一条式子同时给出四个子空间：
 | 列空间 Col | r=2 | $u_1,u_2$ | 输出能到达的全部范围 |
 | 左零空间 | m−r=1 | $u_3$ | 输出永远到不了的方向 |
 
-<img src="images/fig02_subspace.png" alt="fig02 subspace" width="780">
+<img src="images/fig02_subspace.png" alt="fig02_subspace" width="780">
 
 ### 📖 这张图怎么读
 
@@ -102,7 +102,7 @@ $$A=\underbrace{\sigma_1u_1v_1^\top}_{\text{最粗轮廓}}+\underbrace{\sigma_2u
 
 实测前 8 个奇异值：`14.95, 5.64, 1.62, 1.47, 1.05, 0.82, 0.58, 0.52`。**第 1 层单独占 84.98% 能量**。
 
-<img src="images/fig03_rank1.png" alt="fig03 rank1" width="820">
+<img src="images/fig03_rank1.png" alt="fig03_rank1" width="820">
 
 ### 📖 这张图怎么读
 
@@ -134,8 +134,8 @@ $$A=\underbrace{\sigma_1u_1v_1^\top}_{\text{最粗轮廓}}+\underbrace{\sigma_2u
 | **低秩 k=2** | **3.09 分** |
 | 低秩 k=3 | 7.68 分 |
 
-<img src="images/fig04_grades.png" alt="fig04 grades" width="820">
-<img src="images/fig04b_spectrum.png" alt="fig04b spectrum" width="520">
+<img src="images/fig04_grades.png" alt="fig04_grades" width="820">
+<img src="images/fig04b_spectrum.png" alt="fig04b_spectrum" width="520">
 
 ### 📖 这两张图怎么读
 
@@ -162,7 +162,7 @@ $$A=\underbrace{\sigma_1u_1v_1^\top}_{\text{最粗轮廓}}+\underbrace{\sigma_2u
 | 猫-猫粮 | 0.243 | 1.000 |
 | 猫-汽车 | 0.000 | −0.000 |
 
-<img src="images/fig05_lsa.png" alt="fig05 lsa" width="700">
+<img src="images/fig05_lsa.png" alt="fig05_lsa" width="700">
 
 ### 📖 这张图怎么读
 
@@ -182,7 +182,7 @@ $\Sigma^{+}$ 把每个非零 $\sigma$ 取倒数；**接近 0 的 $\sigma$ 要直
 
 实测三种算法（SVD 手算 / `lstsq` / `pinv`）给出完全一致的结果：$a=2.2218,\ b=2.1699$（真实 2.5 / 1.0，被离群点拉偏）。
 
-<img src="images/fig06_pinv.png" alt="fig06 pinv" width="820">
+<img src="images/fig06_pinv.png" alt="fig06_pinv" width="820">
 
 ### 📖 这张图怎么读
 
@@ -230,7 +230,7 @@ $$\text{有效秩 PR}=\frac{\left(\sum_i\sigma_i^2\right)^2}{\sum_i\sigma_i^4}\q
 | 部分塌缩（方差快速衰减） | **8.15** / 64 | 9.1% |
 | 完全塌缩（样本只沿一个方向浮动） | **1.05** / 64 | 40%+ |
 
-<img src="images/fig07_collapse.png" alt="fig07 collapse" width="820">
+<img src="images/fig07_collapse.png" alt="fig07_collapse" width="820">
 
 ### 📖 这张图怎么读
 
